@@ -14,7 +14,7 @@ extractor = URLExtract()
 
 for i, file_name in enumerate(file_list):
 
-    f1 = open(file_name, mode='r', encoding='Shift-JIS')
+    f1 = open(file_name, mode='r', encoding='cp932')
     f2 = open(file_name.replace('txt', 'html'), mode='w', encoding='UTF-8')
 
     title = file_name[-12:-8] + '年' + \
@@ -41,6 +41,8 @@ for i, file_name in enumerate(file_list):
             body_string = '<span style="color:#7777ff;">' + body_string + '</span>'
         if 'New topic' in body_string:
             body_string = '<span style="color:#7777ff;">' + body_string + '</span>'
+        if 'Topic for' in body_string:
+            body_string = '<span style="color:#7777ff;">' + body_string + '</span>'
         if 'has left' in body_string:
             body_string = '<span style="color:#227722;">' + body_string + '</span>'
         if 'now known' in body_string:
@@ -54,10 +56,18 @@ for i, file_name in enumerate(file_list):
 
         f2.write(time_string + body_string)
 
+    if i + 1 != len(file_list):
+        next_name = file_list[i + 1][-12:].replace('txt', 'html')
+        title_next = next_name[0:4] + '年' + \
+            next_name[4:6] + '月' + next_name[6:8] + '日のログ'
+        next_link = '<br />\n<a href=\'' + next_name + \
+            '\'>' + title_next + '</a><br />\n'
+        f2.write(next_link)
+
     footer = '</body></html>'
     f2.write(footer)
 
     f1.close()
     f2.close()
 
-    breakpoint()
+    print(file_name + ' done.')
